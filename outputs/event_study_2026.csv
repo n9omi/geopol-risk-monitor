@@ -1,0 +1,53 @@
+series,desk,kind,esc_mean,esc_up,esc_n,deesc_mean,deesc_up,deesc_n,sensitivity
+Brent,Energy,price,5,67,6,-7,0,3,12
+UST 10Y,Rates,rate,5.3,50,6,0,33,3,5.3
+MOVE,Volatility,price,3.9,50,6,-3.4,33,3,7.3
+VIX,Volatility,price,6.7,50,6,-12.7,33,3,19.4
+S&P 500,Equities,price,0.4,67,6,1.9,67,3,-1.5
+Gold,Metals & Ags,price,-3.2,17,6,-1,67,3,-2.2
+DXY,FX,price,0.2,50,6,0,33,3,0.2
+TAIEX,Equities,price,-0.5,60,5,4.7,100,3,-5.2
+USD/TWD,FX,price,0.2,33,6,-0.1,67,3,0.3
+USD/KRW,FX,price,-0.1,33,6,-0.2,33,3,0.1
+USD/INR,FX,price,0.6,83,6,1.2,67,3,-0.6
+USD/ZAR,FX,price,1.3,83,6,-1,33,3,2.3
+Copper,Metals & Ags,price,-0.5,50,6,0.3,67,3,-0.8
+Cocoa,Metals & Ags,price,3.3,50,6,14.7,100,3,-11.4
+Bovespa,Equities,price,1.7,67,6,2.3,100,3,-0.6
+USD/BRL,FX,price,-0.6,33,6,-0.2,67,3,-0.4
+USD/MXN,FX,price,0.5,67,6,-0.7,33,3,1.2
+USD/COP,FX,price,-0.5,50,6,-2,0,3,1.5
+HY OAS,Credit,rate,-4.2,33,6,-12.3,0,3,8.1
+XLE,Equities,price,1.4,67,6,-4,0,3,5.4
+ITA,Equities,price,-1.9,17,6,3.2,67,3,-5.1
+JETS,Equities,price,-2.3,17,6,4.8,100,3,-7.1
+SMH,Equities,price,-0.1,33,6,3.8,67,3,-3.9
+VIX 9D,Volatility,price,6.3,50,6,-22.1,33,3,28.4
+VIX 3M,Volatility,price,3.4,50,6,-7.8,33,3,11.2
+OVX,Volatility,price,5.2,33,6,-17.4,0,3,22.6
+GVZ,Volatility,price,3.8,33,6,-1,33,3,4.8
+UST 3M,Rates,rate,1.2,67,6,2.8,67,3,-1.6
+UST 5Y,Rates,rate,7.3,67,6,0,67,3,7.3
+UST 30Y,Rates,rate,3.2,67,6,0.3,33,3,2.9
+WTI,Energy,price,3.1,33,6,-10,0,3,13.1
+RBOB,Energy,price,6.4,67,6,-2.3,33,3,8.7
+ULSD,Energy,price,8.1,67,6,-6,67,3,14.1
+Frontline (FRO),Energy,price,3.8,83,6,1.5,67,3,2.3
+Wheat,Metals & Ags,price,3.7,83,6,0.7,33,3,3
+USD/JPY,FX,price,0.3,83,6,0.1,33,3,0.2
+USD/CHF,FX,price,0.2,50,6,-0.3,33,3,0.5
+USD/CNY,FX,price,-0.1,17,6,-0.2,33,3,0.1
+EM corp OAS,Credit,rate,-0.7,50,6,-7,0,3,6.3
+CCC OAS,Credit,rate,2.7,67,6,-14.7,33,3,17.4
+BBB OAS,Credit,rate,-2.2,17,6,-2.7,0,3,0.5
+Treasury 2Y,Rates,rate,6,50,6,2.3,67,3,3.7
+3-2-1 crack,Energy,level,6.673,100,6,3.787,100,3,2.886
+Diesel crack,Energy,level,9.885,67,6,-1.243,67,3,11.128
+Brent–WTI,Energy,level,2.127,67,6,2.787,100,3,-0.66
+VIX / VIX 3M,Volatility,level,0.034,67,6,-0.046,33,3,0.08
+3m10y,Rates,rate,4.2,50,6,-2.8,33,3,7
+5s30s,Rates,rate,-4.2,33,6,0.3,67,3,-4.5
+CCC–BBB,Credit,rate,4.8,67,6,-12,33,3,16.8
+ITA / JETS,Equities,price,0.3,50,6,-1.6,33,3,1.9
+XLE / S&P 500,Equities,price,1,67,6,-5.8,0,3,6.8
+SMH / S&P 500,Equities,price,-0.5,50,6,2,67,3,-2.5

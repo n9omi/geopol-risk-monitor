@@ -1,0 +1,7 @@
+rank,asset_class,signal,conviction,gap,risk_hit,evidence_n,expected_5d,vehicle,expression,pm_tilt
+1,US equities,Under-priced,High,83,67,12,-0.5,Outright (no options gauge yet),Long VIX calls or S&P put spreads while implied vol is cheap,"Trim beta; tilt toward energy and defense, away from airlines and discretionary"
+2,Softs,Rich,Medium,-49,50,6,3.9,Outright (no options gauge yet),Fade rallies driven by non-geopolitical weather,Watch confectionery margins
+3,Industrial metals,Rich,Medium,-25,50,6,-0.1,Outright (no options gauge yet),Fade copper rallies on China growth scares,Prefer miners with supply outside conflict zones
+4,Taiwan semis,Watch,High,74,40,5,0.8,Outright (no options gauge yet),"Not confirmed by past escalations; if hedging, keep it small: buy TAIEX or TSM put spreads; long USD/TWD calls",Cap Taiwan semis concentration; hedge into the January cliff
+5,Korea FX,Watch,High,70,33,6,-0.1,Outright (no options gauge yet),"Not confirmed by past escalations; if hedging, keep it small: long USD/KRW",Hedge Korea FX on equity exposure
+6,Brazil equities,Watch,High,60,33,6,1,Outright (no options gauge yet),"Not confirmed by past escalations; if hedging, keep it small: buy Bovespa (EWZ) put spreads into the runoff",Size Brazil for a binary runoff; hedge with BRL options rather than outright cuts

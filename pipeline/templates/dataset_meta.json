@@ -1,0 +1,122 @@
+[
+ {
+  "id": "calendar",
+  "title": "Catalyst calendar",
+  "description": "Scheduled data releases, central-bank meetings and minutes, elections (incl. Brazil's runoff), deadlines and regulatory and trade dates from Oct 2026 to Dec 2027, with a source link per row."
+ },
+ {
+  "id": "catalysts",
+  "title": "Catalyst tracker",
+  "description": "Researched catalysts across the Middle East, Asia-Pacific, Africa, Latin America, Europe and the US with region, transmission channel, status, a source link per row and an analyst risk score (1–5, Claude's judgment). Rows marked as markers are dated past events; Middle East markers carry a direction (+1 escalation, −1 de-escalation) that drives the event study."
+ },
+ {
+  "id": "desk",
+  "title": "Desk-level market data",
+  "description": "Daily closes from 3 Nov 2025 to 9 Oct 2026 for 22 desk series: sector ETFs (XLE, ITA, JETS, SMH), VIX 9-day and 3-month, OVX, GVZ, US 3-month/5-year/30-year yields, WTI, RBOB, ULSD, Frontline (tanker proxy), wheat, USD/JPY, USD/CHF, USD/CNY (Yahoo Finance) and ICE BofA EM corporate, CCC and BBB OAS (FRED). Each row carries its desk and change convention."
+ },
+ {
+  "id": "desks",
+  "title": "Desk definitions",
+  "description": "Analyst-written question, watch list, augmentation and remaining data gaps for each of the seven desks."
+ },
+ {
+  "id": "fed_comms",
+  "title": "Fed communications",
+  "description": "Dated statements by Fed officials and the committee (press conferences, speeches, minutes) from Jun–Oct 2026 with an analyst stance score (−2 dovish to +2 hawkish), the timing signal and a short summary, each with a source link."
+ },
+ {
+  "id": "fed_daily",
+  "title": "Fed rates corridor, daily",
+  "description": "Daily from 6 Nov 2025 to 9 Oct 2026: EFFR and its 99th percentile with the target range (New York Fed), IORB (top of range − 10 bp), SOFR, its 99th percentile and volume (New York Fed), ON RRP take-up (New York Fed operations, from 10 Dec 2025), and 3-month, 2-year and 10-year Treasury par yields (US Treasury, from 1 Oct 2025)."
+ },
+ {
+  "id": "fed_decisions",
+  "title": "FOMC decisions",
+  "description": "The eight FOMC decisions from Oct 2025 to Sep 2026: decision, target range, vote, hawkish and dovish dissents with names, guidance, balance-sheet actions and dot-plot medians, each with a source link."
+ },
+ {
+  "id": "fed_playbook",
+  "title": "Fed plumbing playbook",
+  "description": "Analyst thresholds and interpretation for each money-market micro-indicator: normal range, watch and stress levels, what it signals, market implication and trader action."
+ },
+ {
+  "id": "fed_pricing",
+  "title": "Market pricing of Fed hikes",
+  "description": "Dated snapshots of the market-implied probability of a hike at the 28 Oct and 9 Dec 2026 meetings from CME FedWatch, Polymarket and press reports."
+ },
+ {
+  "id": "fed_scenarios",
+  "title": "October FOMC scenarios",
+  "description": "Four outcomes for the 27–28 Oct meeting with probabilities (hike = market-implied; the split of holds is analyst judgment), the assumed 2-year yield shock, what each signals and a trader playbook."
+ },
+ {
+  "id": "fed_weekly",
+  "title": "Fed balance sheet, weekly (H.4.1)",
+  "description": "Wednesday levels in $bn from Sep 2025 (FRED): total assets (WALCL), reserve balances (WRESBAL), Treasury General Account (WTREGEN), Treasury securities (TREAST), MBS (WSHOMCB), repurchase agreements i.e. standing repo use (WORAL) and primary credit (WLCFLPCL)."
+ },
+ {
+  "id": "framework",
+  "title": "Asset exposure framework",
+  "description": "Analyst framework (Claude's judgment) for 17 asset classes: gauge, pricing direction, desk, implied-vol gauge where one exists, transmission channel, exposure ratings 0–3 to nine catalyst channels, current read, watch items, and the hedge, fade and portfolio expressions the signal engine selects from."
+ },
+ {
+  "id": "fred",
+  "title": "FRED latest observations",
+  "description": "The five latest observations on FRED series pages for ICE BofA high-yield and IG spreads (BAMLH0A0HYM2, BAMLC0A0CM), DGS10, dated Brent spot (DCOILBRENTEU), VIXCLS, the 10-year breakeven (T10YIE) and 10-year TIPS real yield (DFII10), read 10 Oct 2026."
+ },
+ {
+  "id": "gpr",
+  "title": "Daily geopolitical risk index",
+  "description": "Caldara–Iacoviello daily GPR, 6 Sep – 5 Oct 2026, as republished at stock-marketdata.com/gpr-index (original: matteoiacoviello.com/gpr.htm). Provisional and subject to revision."
+ },
+ {
+  "id": "hist",
+  "title": "Historical analog prices",
+  "description": "Daily closes for Brent, VIX, S&P 500, gold, the 10-year yield and the dollar index around four windows: Sep 2019–Jan 2020, Feb–Mar 2022, Sep 2023–Apr 2024 and Jun–Jul 2025 (Yahoo Finance)."
+ },
+ {
+  "id": "hist_events",
+  "title": "Historical analog events",
+  "description": "Eight dated geopolitical shocks used as out-of-year analogs (2019–2025), each tagged escalation (+1) or de-escalation (−1); dates are the first trading day after the event."
+ },
+ {
+  "id": "indicators",
+  "title": "Alternative and macro indicators",
+  "description": "Hormuz shipping, sanctions, energy balance, policy-rate, inflation, trade, fiscal and Asia, Africa and Latin America figures compiled from news and data briefs; each row carries its as-of date and source link. October hike odds updated to 7 Oct."
+ },
+ {
+  "id": "markets",
+  "title": "Market closes (Yahoo Finance, FRED)",
+  "description": "Daily closes 9 Oct 2025 – 9 Oct 2026 for Brent futures (BZ=F), US 10-year yield (^TNX), MOVE, VIX, S&P 500, gold (GC=F), dollar index (DX-Y.NYB), TAIEX (^TWII), USD/TWD, USD/KRW, USD/INR, USD/ZAR, copper (HG=F), cocoa (CC=F), Bovespa (^BVSP), USD/BRL, USD/MXN and USD/COP from Yahoo Finance history pages, plus the ICE BofA US high-yield spread (BAMLH0A0HYM2) from FRED; each row names its source. Read 10 Oct 2026; latest VIX, 10-year and HY values match FRED."
+ },
+ {
+  "id": "predictions",
+  "title": "Prediction-market odds",
+  "description": "Kalshi and Polymarket prices for 2026 midterm control (DeFi Rate snapshots of 24 Mar and 10 Oct 2026) and the CLARITY Act (The Defiant). March Senate rows are 100 minus the reported Republican price."
+ },
+ {
+  "id": "regulation",
+  "title": "US and EU regulation",
+  "description": "US and EU regulatory measures for banking, markets, digital assets, AI, sustainability, trade/sanctions and energy: stage, key date, summary and market impact, with a source link per row."
+ },
+ {
+  "id": "roadmap",
+  "title": "Deliverables roadmap",
+  "description": "The toolkit's deliverables with audience, desk, status (Live, Live on proxy data, In progress, Needs vendor data), what each is and the next step. Analyst-maintained."
+ },
+ {
+  "id": "scenarios",
+  "title": "Hormuz scenario probabilities",
+  "description": "Analyst probabilities (Claude's judgment) for escalation, status quo and de-escalation in the Strait of Hormuz over the coming weeks, used to weight event-study moves."
+ },
+ {
+  "id": "shocks",
+  "title": "Shock definitions",
+  "description": "Six analyst-defined shocks for the shock lab: three measured geopolitical event bundles (2026 Hormuz escalation and de-escalation averages, 2019–25 analogs) and three factor shocks (Brent +10%, 2-year +15 bp, S&P 500 −3% beyond rates and oil), with horizon and definition."
+ },
+ {
+  "id": "washington",
+  "title": "Washington monitor",
+  "description": "Congress, Supreme Court and agency actions with status, last action and next date, researched from the linked sources as of 10 Oct 2026."
+ }
+]

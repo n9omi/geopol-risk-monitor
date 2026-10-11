@@ -1,0 +1,7 @@
+series,hist_esc_mean,hist_esc_up,hist_esc_n,hist_deesc_mean,hist_deesc_n,cur_esc_mean,cur_esc_up,cur_esc_n,pooled_esc_mean,pooled_esc_up,pooled_esc_n,agree
+Brent,5.8,67,6,-5.6,2,5,67,6,5.4,67,12,Yes
+VIX,7,83,6,-13.8,2,6.7,50,6,6.8,67,12,Yes
+S&P 500,0,50,6,2.2,2,0.4,67,6,0.2,58,12,No
+Gold,1.6,83,6,-2.2,2,-3.2,17,6,-0.8,50,12,No
+UST 10Y,-5,33,6,-5,2,5.3,50,6,0.2,42,12,No
+DXY,0.6,100,6,-0.6,2,0.2,50,6,0.4,75,12,Yes

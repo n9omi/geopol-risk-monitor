@@ -1,0 +1,711 @@
+<style>
+.gr { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: flex; flex-direction: column; gap: var(--cds-gap-lg); }
+.gr b, .gr strong { font-weight: 600; }
+.gr-head { display: flex; flex-direction: column; gap: var(--cds-gap-xs); }
+.gr-title { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; line-height: 1.2; }
+.gr-take { font-size: var(--cds-font-size-body); line-height: 1.55; margin: 0; max-width: 82ch; }
+.gr-meta { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0; }
+.gr-tabs { display: flex; gap: var(--cds-gap-xs); border-bottom: 1px solid var(--color-border-line); overflow-x: auto; scrollbar-width: none; }
+.gr-tab { appearance: none; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: var(--cds-pad-sm) var(--cds-pad-md); font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg-muted); cursor: pointer; white-space: nowrap; }
+.gr-tab:hover { color: var(--color-fg); }
+.gr-tab[aria-selected="true"] { color: var(--color-fg); border-bottom-color: var(--color-fg); }
+.gr-page { display: flex; flex-direction: column; gap: var(--cds-gap-lg); }
+.gr-page[hidden] { display: none; }
+.gr-section { display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
+.gr-h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+.gr-sub { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0; max-width: 92ch; line-height: 1.5; }
+.gr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: var(--cds-gap-md); }
+.gr-grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: var(--cds-gap-md); }
+.gr-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: var(--cds-gap-md); }
+.gr-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); min-width: 0; display: flex; flex-direction: column; gap: var(--cds-gap-xs); }
+.gr-card h3 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+.gr-note { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0; line-height: 1.45; }
+.gr-kpi .lab { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.gr-kpi .val, .gr-ind .val, .gr-asset .val, .gr-big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.15; }
+.gr-kpi .delta { font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; color: var(--color-fg-muted); }
+.gr-kpi .spark, .gr-asset .spark { height: 34px; margin-top: auto; }
+.tone-bad { color: var(--color-bad); }
+.tone-warn { color: var(--color-warn); }
+.tone-ok { color: var(--color-ok); }
+.gr-group-label { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0 0 calc(-1 * var(--cds-gap-xs)); }
+.gr-chartbox { position: relative; min-height: 300px; }
+.gr-chartbox.small { min-height: 180px; }
+.gr-chartbox.mid { min-height: 260px; }
+.gr-chartbox svg { display: block; }
+.gr-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); opacity: 0; max-width: 20rem; z-index: 3; line-height: 1.4; }
+.gr-tip .t-date { color: var(--cds-text-secondary); }
+.gr-seg { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs); }
+.gr-seg button, .gr-link { appearance: none; font: inherit; font-size: var(--cds-font-size-caption); padding: var(--cds-pad-xs) var(--cds-pad-sm); border: 1px solid var(--color-border-line); border-radius: 999px; background: transparent; color: var(--color-fg-muted); cursor: pointer; }
+.gr-seg button[aria-pressed="true"] { background: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
+.gr-link { align-self: flex-start; color: var(--color-fg); }
+.gr-cardhead { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: var(--cds-gap-sm); }
+.gr-events { list-style: none; margin: var(--cds-gap-xs) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr)); gap: var(--cds-gap-xs) var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.gr-events li { display: flex; gap: var(--cds-gap-xs); align-items: baseline; }
+.gr-events .num { flex: none; display: inline-flex; width: 1.3rem; height: 1.3rem; border-radius: 50%; align-items: center; justify-content: center; border: 1px solid var(--cds-chart-reference); color: var(--color-fg); font-variant-numeric: tabular-nums; }
+.gr-events .num.esc { border-color: var(--cds-chart-status-critical); }
+.gr-tablewrap { max-height: 34rem; overflow: auto; border-radius: var(--cds-radius); }
+.gr-table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); }
+.gr-table th { position: sticky; top: 0; background: var(--color-panel); text-align: left; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); white-space: nowrap; z-index: 1; }
+.gr-table th.r, .gr-table td.r { text-align: right; }
+.gr-table th button { all: unset; cursor: pointer; }
+.gr-table td { padding: var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); vertical-align: top; line-height: 1.45; }
+.gr-table td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.gr-table td.nowrap { white-space: nowrap; }
+.gr-table td.strong { color: var(--color-fg); font-weight: 500; min-width: 10rem; }
+.gr-table td.wide { min-width: 15rem; color: var(--color-fg-muted); }
+.gr-table a { color: inherit; text-decoration: underline; text-decoration-color: var(--color-border-line); text-underline-offset: 2px; }
+.gr-table a:hover { text-decoration-color: currentColor; }
+.gr-pill { display: inline-block; padding: 0 var(--cds-pad-sm); border-radius: 999px; border: 1px solid var(--color-border-line); white-space: nowrap; color: var(--color-fg-muted); }
+.gr-pill.bad { color: var(--color-bad); border-color: currentColor; }
+.gr-pill.warn { color: var(--color-warn); border-color: currentColor; }
+.gr-pill.ok { color: var(--color-ok); border-color: currentColor; }
+.gr-risk { display: inline-flex; align-items: center; gap: var(--cds-gap-xs); font-variant-numeric: tabular-nums; }
+.gr-risk i { display: inline-block; height: 6px; border-radius: 3px; background: var(--cds-chart-status-critical); }
+.gr-risk i.lo { background: var(--cds-chart-muted); }
+.gr-top { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: var(--cds-gap-md); }
+.gr-topitem { border-left: 3px solid var(--cds-chart-status-critical); padding: var(--cds-pad-xs) var(--cds-pad-md); display: flex; flex-direction: column; gap: 2px; }
+.gr-topitem.lvl4 { border-left-color: var(--cds-chart-muted); }
+.gr-topitem .tt { font-weight: 500; }
+.gr-topitem .dd { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.45; }
+.gr-heat { display: grid; grid-template-columns: minmax(7rem, 1.4fr) repeat(9, minmax(2.3rem, 1fr)); gap: 3px; font-size: var(--cds-font-size-caption); position: relative; overflow-x: auto; }
+.gr-heat .hc { padding: var(--cds-pad-xs); display: flex; align-items: center; justify-content: center; border-radius: 4px; font-variant-numeric: tabular-nums; min-height: 2.1rem; text-align: center; }
+.gr-heat .hh { color: var(--color-fg-muted); align-items: flex-end; line-height: 1.2; }
+.gr-heat .hr { justify-content: flex-start; color: var(--color-fg); text-align: left; }
+.gr-heat .hv { cursor: default; color: var(--color-fg); }
+.gr-ind { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: var(--cds-gap-md); }
+.gr-meter { height: 6px; border-radius: 3px; background: var(--cds-chart-grid); overflow: hidden; margin: var(--cds-gap-xs) 0; }
+.gr-meter span { display: block; height: 100%; background: var(--cds-chart-status-critical); border-radius: 3px; }
+.gr-asset .row { display: flex; gap: var(--cds-gap-md); align-items: baseline; flex-wrap: wrap; }
+.gr-asset dl { margin: var(--cds-gap-xs) 0 0; display: grid; gap: var(--cds-gap-xs); font-size: var(--cds-font-size-caption); }
+.gr-asset dt { color: var(--color-fg-muted); }
+.gr-asset dd { margin: 0; line-height: 1.45; }
+.gr-matrix { display: grid; grid-template-columns: minmax(7rem, .7fr) 1fr 1fr; gap: 1px; background: var(--color-border-line); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); overflow: hidden; font-size: var(--cds-font-size-caption); }
+.gr-matrix > div { background: var(--color-panel); padding: var(--cds-pad-sm); display: flex; flex-direction: column; gap: var(--cds-gap-xs); }
+.gr-matrix .mh { color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); }
+.gr-matrix .ms { font-weight: 500; }
+.gr-matrix .mi { line-height: 1.35; }
+.gr-matrix .mi .gr-pill { margin-right: var(--cds-gap-xs); }
+.gr-fail { display: flex; align-items: center; justify-content: center; gap: var(--cds-gap-xs); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); min-height: inherit; height: 100%; }
+.gr-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+.gr-method { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.55; max-width: 96ch; }
+.gr-method p { margin: 0 0 var(--cds-gap-xs); }
+.gr-method ol { margin: 0 0 var(--cds-gap-xs); padding-left: 1.2rem; }
+.gr-search { font: inherit; font-size: var(--cds-font-size-caption); padding: var(--cds-pad-xs) var(--cds-pad-sm); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); min-width: 12rem; }
+.gr-pipe { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr)); gap: var(--cds-gap-sm); counter-reset: step; }
+.gr-pipe > div { border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-sm) var(--cds-pad-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.45; position: relative; background: var(--color-panel); }
+.gr-pipe > div b { display: block; color: var(--color-fg); font-weight: 500; margin-bottom: 2px; }
+.gr-pipe > div::before { counter-increment: step; content: counter(step); position: absolute; top: var(--cds-pad-sm); right: var(--cds-pad-sm); color: var(--cds-chart-reference); font-variant-numeric: tabular-nums; }
+.gr-signal-list { display: flex; flex-direction: column; gap: var(--cds-gap-xs); font-size: var(--cds-font-size-caption); }
+.gr-signal-list .row { display: flex; gap: var(--cds-gap-sm); align-items: baseline; flex-wrap: wrap; }
+.gr-signal-list .row .who { font-weight: 500; color: var(--color-fg); }
+.gr-signal-list .row .why { color: var(--color-fg-muted); }
+.gr-play ul { margin: 0; padding-left: 1.1rem; font-size: var(--cds-font-size-caption); line-height: 1.55; display: flex; flex-direction: column; gap: var(--cds-gap-xs); }
+.gr-play .aud { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+[data-dash-source-state=empty] { color: transparent; }
+[data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+@media (max-width: 640px) { .gr-hide-narrow { display: none; } }
+</style>
+
+<div class="gr">
+  <header class="gr-head">
+    <h1 class="gr-title" id="top">Geopolitical risk monitor</h1>
+    <p class="gr-take" id="takeaway">
+      Hormuz remains the dominant catalyst: Brent futures at <b class="dash-skeleton" data-source="latest" data-field="value" data-where="series=Brent" data-fmt="usd2">—</b>
+      are <b class="dash-skeleton" data-source="latest" data-field="chg_prewar_pct" data-where="series=Brent" data-fmt="spct1">—</b> since the last pre-war close and dated physical Brent trades
+      <b class="dash-skeleton" data-source="premium_latest" data-field="premium" data-fmt="usd2">—</b> above futures. Rates and credit have repriced — the 10-year sits at the
+      <b class="dash-skeleton" data-source="latest" data-field="pct_rank" data-where="series=UST 10Y" data-fmt="ord">—</b> and high-yield spreads at the
+      <b class="dash-skeleton" data-source="latest" data-field="pct_rank" data-where="series=HY OAS" data-fmt="ord">—</b> of their one-year ranges — but equity volatility has not: the VIX is at the
+      <b class="dash-skeleton" data-source="latest" data-field="pct_rank" data-where="series=VIX" data-fmt="ord">—</b>.
+      Signal engine: <span id="take-signals" data-source="signals">—</span>.
+    </p>
+    <p class="gr-meta">Market closes through <span class="dash-skeleton" data-source="latest" data-field="date" data-where="series=S%26P 500" data-fmt="date">—</span>. Event, policy and regulatory entries are researched from linked sources; risk scores, exposure ratings and scenario probabilities are analyst judgments. Research signals, not investment advice.</p>
+  </header>
+
+  <nav class="gr-tabs" role="tablist" aria-label="Sections">
+    <button class="gr-tab" role="tab" data-tab="overview" aria-selected="true">Overview</button>
+    <button class="gr-tab" role="tab" data-tab="signals" aria-selected="false">Quant signals</button>
+    <button class="gr-tab" role="tab" data-tab="catalysts" aria-selected="false">Catalysts &amp; alt data</button>
+    <button class="gr-tab" role="tab" data-tab="asiaafrica" aria-selected="false">Asia, Africa &amp; LatAm</button>
+    <button class="gr-tab" role="tab" data-tab="framework" aria-selected="false">Asset risk framework</button>
+    <button class="gr-tab" role="tab" data-tab="washington" aria-selected="false">Washington monitor</button>
+    <button class="gr-tab" role="tab" data-tab="regulation" aria-selected="false">US &amp; EU regulation</button>
+    <button class="gr-tab" role="tab" data-tab="calendar" aria-selected="false">Calendar</button>
+  </nav>
+
+  <!-- ================= OVERVIEW ================= -->
+  <section class="gr-page" id="overview">
+    <div class="gr-section">
+      <p class="gr-group-label">Shock transmission</p>
+      <div class="gr-kpis">
+        <div class="gr-card gr-kpi" id="kpi-brent">
+          <span class="lab">Brent futures, $/bbl</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=Brent" data-fmt="usd2">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_prewar_pct" data-where="series=Brent" data-fmt="spct1" data-tone="up-bad">—</b> since 27 Feb · <span data-source="latest" data-field="date" data-where="series=Brent" data-fmt="dshort">—</span></span>
+          <div class="spark" data-source="markets" data-spark="Brent"></div>
+        </div>
+        <div class="gr-card gr-kpi" id="kpi-premium">
+          <span class="lab">Dated Brent premium to futures</span>
+          <span class="val dash-skeleton" data-source="premium_latest" data-field="premium" data-fmt="usd2">—</span>
+          <span class="delta">Dated <span data-source="premium_latest" data-field="dated" data-fmt="usd2">—</span> vs futures <span data-source="premium_latest" data-field="futures" data-fmt="usd2">—</span> · <span data-source="premium_latest" data-field="date" data-fmt="dshort">—</span></span>
+          <span class="gr-note">Prompt physical barrels are far scarcer than the futures curve implies.</span>
+        </div>
+        <div class="gr-card gr-kpi" id="kpi-ust">
+          <span class="lab">US 10-year yield</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=UST 10Y" data-fmt="pct2">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_prewar_bp" data-where="series=UST 10Y" data-fmt="sbp" data-tone="up-bad">—</b> since 27 Feb · <span data-source="latest" data-field="date" data-where="series=UST 10Y" data-fmt="dshort">—</span></span>
+          <div class="spark" data-source="markets" data-spark="UST 10Y"></div>
+        </div>
+        <div class="gr-card gr-kpi" id="kpi-move">
+          <span class="lab">MOVE (Treasury implied vol)</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=MOVE" data-fmt="num2">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_1m_pct" data-where="series=MOVE" data-fmt="spct1" data-tone="up-bad">—</b> vs a month ago · <span data-source="latest" data-field="date" data-where="series=MOVE" data-fmt="dshort">—</span></span>
+          <div class="spark" data-source="markets" data-spark="MOVE"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gr-section">
+      <p class="gr-group-label">Risk pricing</p>
+      <div class="gr-kpis">
+        <div class="gr-card gr-kpi" id="kpi-vix">
+          <span class="lab">VIX</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=VIX" data-fmt="num2">—</span>
+          <span class="delta"><b data-source="latest" data-field="pct_rank" data-where="series=VIX" data-fmt="ord">—</b> of 1-year range · <span data-source="latest" data-field="date" data-where="series=VIX" data-fmt="dshort">—</span></span>
+          <div class="spark" data-source="markets" data-spark="VIX"></div>
+        </div>
+        <div class="gr-card gr-kpi" id="kpi-hy">
+          <span class="lab">High-yield spread (OAS)</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=HY OAS" data-fmt="pct2">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_1m_bp" data-where="series=HY OAS" data-fmt="sbp" data-tone="up-bad">—</b> vs a month ago · <span data-source="latest" data-field="pct_rank" data-where="series=HY OAS" data-fmt="ord">—</span></span>
+          <div class="spark" data-source="markets" data-spark="HY OAS"></div>
+        </div>
+        <div class="gr-card gr-kpi" id="kpi-spx">
+          <span class="lab">S&amp;P 500</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=S%26P 500" data-fmt="num2">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_prewar_pct" data-where="series=S%26P 500" data-fmt="spct1" data-tone="up-good">—</b> since 27 Feb · <span data-source="latest" data-field="date" data-where="series=S%26P 500" data-fmt="dshort">—</span></span>
+          <div class="spark" data-source="markets" data-spark="S&amp;P 500"></div>
+        </div>
+        <div class="gr-card gr-kpi" id="kpi-gold">
+          <span class="lab">Gold futures, $/oz</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=Gold" data-fmt="usd2">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_prewar_pct" data-where="series=Gold" data-fmt="spct1">—</b> since 27 Feb · <span data-source="latest" data-field="date" data-where="series=Gold" data-fmt="dshort">—</span></span>
+          <div class="spark" data-source="markets" data-spark="Gold"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gr-grid">
+      <div class="gr-card" id="signal-summary">
+        <div class="gr-cardhead"><h3>What the signals say now</h3><span class="gr-pill bad" data-source="stress_latest" data-field="regime">—</span></div>
+        <p class="gr-note">Stress composite <b data-source="stress_latest" data-field="composite" data-fmt="int">—</b>/100 (<span data-source="stress_latest" data-field="composite_chg20" data-fmt="sint">—</span> over 20 days). <span data-source="stress_latest" data-field="gap_read">—</span>: shock channels at the <span data-source="stress_latest" data-field="shock" data-fmt="ord">—</span>, equity vol at the <span data-source="stress_latest" data-field="vix" data-fmt="ord">—</span>.</p>
+        <div class="gr-signal-list" id="sig-summary" data-source="signals"></div>
+        <button class="gr-link" type="button" data-goto="signals">Open the signal engine →</button>
+      </div>
+      <div class="gr-card" id="hotspots">
+        <h3>Global hotspots by region</h3>
+        <p class="gr-note">Live catalysts per region with the highest analyst risk score.</p>
+        <div class="gr-tablewrap">
+          <table class="gr-table" id="region-table" data-source="region_summary" data-row-key="region">
+            <thead><tr><th data-field="region">Region</th><th data-field="live" class="r">Live</th><th data-field="escalating" class="r">Escalating</th><th data-field="max_risk" class="r">Max risk</th><th data-field="top">Top catalyst</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="gr-card" id="event-study">
+      <div class="gr-cardhead">
+        <h3>Catalysts against the market</h3>
+        <span class="gr-note">Stress composite now: <b data-source="stress_latest" data-field="composite" data-fmt="int">—</b> / 100 on <span data-source="stress_latest" data-field="date" data-fmt="dshort">—</span></span>
+      </div>
+      <p class="gr-note">Daily closes, Oct 2025 – Oct 2026, with dated geopolitical and policy events (red rings = escalations). The composite averages the one-year percentile ranks of Brent, the 10-year yield, MOVE, VIX and HY spreads.</p>
+      <div class="gr-seg" id="ev-seg" role="group" aria-label="Series"></div>
+      <div class="gr-chartbox dash-skeleton" id="ev-chart" data-source="markets stress catalysts"><div class="gr-tip" id="ev-tip"></div></div>
+      <ol class="gr-events" id="ev-list" data-source="catalysts"></ol>
+    </div>
+
+    <div class="gr-card" id="top-catalysts">
+      <h3>Highest-risk live catalysts</h3>
+      <p class="gr-note">Analyst risk score 4–5 of 5. Full tracker on the Catalysts tab; Asia, Africa and Latin America on their own tab.</p>
+      <div class="gr-top" id="top-list" data-source="catalysts"></div>
+    </div>
+  </section>
+
+  <!-- ================= SIGNALS ================= -->
+  <section class="gr-page" id="signals" hidden>
+    <div class="gr-section">
+      <h2 class="gr-h2">From risk ranking to tradable signal</h2>
+      <p class="gr-sub">Every step is a calculation you can inspect in Sources. Analyst inputs (risk scores, exposure ratings, scenario probabilities) are kept separate from market data so each can be challenged.</p>
+      <div class="gr-pipe">
+        <div><b>Score catalysts</b>Each live catalyst gets a 1–5 risk score and a transmission channel.</div>
+        <div><b>Map exposure</b>Exposure index = Σ risk × the asset's 0–3 sensitivity to that channel, scaled 0–100.</div>
+        <div><b>Read market pricing</b>Where the asset's gauge sits in its one-year range (0–100).</div>
+        <div><b>Risk-premium gap</b>Gap = exposure − pricing. Positive means the risk is under-priced.</div>
+        <div><b>Confirm empirically</b>Did the gauge actually move the right way after past escalations?</div>
+        <div><b>Express</b>Instrument for traders, tilt for PMs, narrative for strategists.</div>
+      </div>
+    </div>
+
+    <div class="gr-kpis" id="regime-tiles">
+      <div class="gr-card gr-kpi">
+        <span class="lab">Regime</span>
+        <span class="val dash-skeleton" data-source="stress_latest" data-field="regime">—</span>
+        <span class="delta">Composite <b data-source="stress_latest" data-field="composite" data-fmt="int">—</b>/100, <span data-source="stress_latest" data-field="composite_chg20" data-fmt="sint" data-tone="up-bad">—</span> in 20 days</span>
+      </div>
+      <div class="gr-card gr-kpi">
+        <span class="lab">Pricing gap: shock vs equity vol</span>
+        <span class="val dash-skeleton" data-source="stress_latest" data-field="gap" data-fmt="int">—</span>
+        <span class="delta"><span data-source="stress_latest" data-field="gap_read">—</span> · <span data-source="stress_latest" data-field="gap_pct" data-fmt="ord">—</span> of its history</span>
+      </div>
+      <div class="gr-card gr-kpi">
+        <span class="lab">Shock channels (Brent, 10Y, MOVE)</span>
+        <span class="val dash-skeleton" data-source="stress_latest" data-field="shock" data-fmt="int">—</span>
+        <span class="delta">Average one-year percentile</span>
+      </div>
+      <div class="gr-card gr-kpi">
+        <span class="lab">Risk-asset pricing</span>
+        <span class="val dash-skeleton" data-source="stress_latest" data-field="vix" data-fmt="int">—</span>
+        <span class="delta">VIX percentile · HY spreads <b data-source="stress_latest" data-field="hy" data-fmt="int">—</b></span>
+      </div>
+    </div>
+
+    <div class="gr-card" id="gap-history">
+      <h3>Is the shock priced? Shock channels vs equity volatility</h3>
+      <p class="gr-note">One-year percentile of the shock channels (average of Brent, 10-year, MOVE) against the VIX percentile. The shaded distance is the pricing gap; a wide gap has historically preceded VIX catch-up in escalations.</p>
+      <div class="gr-chartbox mid dash-skeleton" id="gap-chart" data-source="stress"><div class="gr-tip" id="gap-tip"></div></div>
+    </div>
+
+    <div class="gr-card" id="signal-board">
+      <div class="gr-cardhead"><h3>Signal board</h3><span class="gr-note">Sort by any column</span></div>
+      <p class="gr-note">Under-priced = gap ≥ +25 and confirmed by past escalations · Watch = gap ≥ +25 but unconfirmed · Rich = gap ≤ −25 · Fair otherwise. Moves in % (bp for yields and spreads).</p>
+      <div class="gr-tablewrap">
+        <table class="gr-table" id="sig-table" data-source="signals" data-row-key="asset_class">
+          <thead><tr>
+            <th data-field="asset_class"><button data-sort="asset_class">Asset</button></th>
+            <th data-field="gauge" class="gr-hide-narrow">Gauge</th>
+            <th data-field="exposure_index" class="r"><button data-sort="exposure_index">Exposure</button></th>
+            <th data-field="priced" class="r"><button data-sort="priced">Priced</button></th>
+            <th data-field="gap" class="r"><button data-sort="gap">Gap</button></th>
+            <th data-field="confirmed"><button data-sort="confirmed">Confirmed</button></th>
+            <th data-field="signal"><button data-sort="signal">Signal</button></th>
+            <th data-field="conviction" class="gr-hide-narrow">Conviction</th>
+            <th data-field="mom_z20" class="r gr-hide-narrow"><button data-sort="mom_z20">20d z</button></th>
+            <th data-field="oil_beta_60d" class="r gr-hide-narrow"><button data-sort="oil_beta_60d">Oil β</button></th>
+            <th data-field="expected_5d" class="r gr-hide-narrow"><button data-sort="expected_5d">Exp. 5d</button></th>
+            <th data-field="expression">Expression</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="gr-grid">
+      <div class="gr-card" id="gap-bars-card">
+        <h3>Risk-premium gap by asset</h3>
+        <p class="gr-note">Exposure index minus market pricing. Bars beyond the dashed ±25 lines trigger a signal.</p>
+        <div class="gr-chartbox mid dash-skeleton" id="gapbars" data-source="signals"><div class="gr-tip" id="gapbars-tip"></div></div>
+      </div>
+      <div class="gr-card" id="hedge-card">
+        <h3>Which instruments actually hedged escalations?</h3>
+        <p class="gr-note">Average 5-day move after Middle East escalations, scaled by each series' normal 5-day volatility. Right = rose in escalations.</p>
+        <div class="gr-chartbox mid dash-skeleton" id="hedgebars" data-source="hedge_rank"><div class="gr-tip" id="hedge-tip"></div></div>
+      </div>
+    </div>
+
+    <div class="gr-card" id="event-table-card">
+      <h3>Event study: 5-day reaction to Middle East escalations and de-escalations</h3>
+      <p class="gr-note">From the last close before each event to the fifth close after it. Escalations: <span data-source="event_study" data-field="esc_n" data-where="series=Brent" data-fmt="int">—</span> events; de-escalations: <span data-source="event_study" data-field="deesc_n" data-where="series=Brent" data-fmt="int">—</span>. Small samples — treat as directional evidence, not estimates.</p>
+      <div class="gr-tablewrap">
+        <table class="gr-table" id="es-table" data-source="event_study" data-row-key="series">
+          <thead><tr>
+            <th data-field="series">Series</th>
+            <th data-field="esc_mean" class="r">Escalation avg</th>
+            <th data-field="esc_up" class="r">Rose in</th>
+            <th data-field="deesc_mean" class="r">De-escalation avg</th>
+            <th data-field="deesc_up" class="r">Rose in</th>
+            <th data-field="sensitivity" class="r">Sensitivity</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="gr-grid">
+      <div class="gr-card" id="scenario-card">
+        <h3>Hormuz scenarios</h3>
+        <p class="gr-note">Analyst probabilities, applied to the event-study averages to get a probability-weighted 5-day move.</p>
+        <div class="gr-tablewrap">
+          <table class="gr-table" id="scen-table" data-source="scenarios" data-row-key="id">
+            <thead><tr><th data-field="scenario">Scenario</th><th data-field="probability" class="r">Probability</th><th data-field="description">What it looks like</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="gr-card" id="scenario-moves-card">
+        <h3>Scenario-weighted expected move</h3>
+        <p class="gr-note">Skew &gt; 0: the escalation move is larger than the de-escalation move (convex upside).</p>
+        <div class="gr-tablewrap">
+          <table class="gr-table" id="sm-table" data-source="scenario_moves" data-row-key="series">
+            <thead><tr><th data-field="series">Series</th><th data-field="esc_mean" class="r">If escalation</th><th data-field="deesc_mean" class="r">If de-escalation</th><th data-field="expected" class="r">Expected 5d</th><th data-field="skew" class="r">Skew</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="gr-section" id="playbooks">
+      <h2 class="gr-h2">Playbooks by audience</h2>
+      <div class="gr-grid3">
+        <div class="gr-card gr-play" id="play-traders">
+          <h3>Traders</h3>
+          <span class="aud">Event-driven, 1–5 day horizon</span>
+          <ul>
+            <li>On a confirmed Hormuz escalation, Brent has moved <b data-source="event_study" data-field="esc_mean" data-where="series=Brent" data-fmt="spct1">—</b> over 5 days on average (up in <span data-source="event_study" data-field="esc_up" data-where="series=Brent" data-fmt="pctint">—</span> of cases); on de-escalation <b data-source="event_study" data-field="deesc_mean" data-where="series=Brent" data-fmt="spct1">—</b>.</li>
+            <li>Escalation hedges ranked by vol-adjusted response: <span id="play-hedges" data-source="hedge_rank">—</span>.</li>
+            <li>Fade the haven reflex in gold: it moved <b data-source="event_study" data-field="esc_mean" data-where="series=Gold" data-fmt="spct1">—</b> after escalations and rose in only <span data-source="event_study" data-field="esc_up" data-where="series=Gold" data-fmt="pctint">—</span>.</li>
+            <li>De-escalation is the bigger move for VIX (<b data-source="event_study" data-field="deesc_mean" data-where="series=VIX" data-fmt="spct1">—</b>) and Taiwan equities (<b data-source="event_study" data-field="deesc_mean" data-where="series=TAIEX" data-fmt="spct1">—</b>): keep a deal-headline playbook ready.</li>
+            <li>Momentum filter: avoid adding where the 20-day z-score exceeds ±2 — the dollar is at <b data-source="latest" data-field="mom_z20" data-where="series=DXY" data-fmt="sz">—</b>, HY spreads at <b data-source="latest" data-field="mom_z20" data-where="series=HY OAS" data-fmt="sz">—</b>.</li>
+          </ul>
+        </div>
+        <div class="gr-card gr-play" id="play-pms">
+          <h3>Portfolio managers</h3>
+          <span class="aud">Positioning and hedge budget, weeks</span>
+          <ul>
+            <li>Spend hedge budget where the gap is wide and confirmed: <span id="play-under" data-source="signals">—</span>.</li>
+            <li>Exposed but unconfirmed (size small or hedge indirectly): <span id="play-watch" data-source="signals">—</span>.</li>
+            <li>Premia to monetize: <span id="play-rich" data-source="signals">—</span>.</li>
+            <li>Book oil-shock sensitivity: S&amp;P 500 daily correlation with Brent is <b data-source="oil_beta" data-field="corr_60d" data-where="series=S%26P 500" data-fmt="s2">—</b> over 60 days (beta <span data-source="oil_beta" data-field="beta_60d" data-where="series=S%26P 500" data-fmt="s2">—</span>); copper <span data-source="oil_beta" data-field="corr_60d" data-where="series=Copper" data-fmt="s2">—</span>.</li>
+            <li>The 10-year moves <b data-source="oil_beta" data-field="beta_60d" data-where="series=UST 10Y" data-fmt="s2">—</b> bp per 1% Brent move: duration is not a hedge against this shock.</li>
+          </ul>
+        </div>
+        <div class="gr-card gr-play" id="play-strategists">
+          <h3>Investment strategists</h3>
+          <span class="aud">Regime and narrative, months</span>
+          <ul>
+            <li>Regime is <b data-source="stress_latest" data-field="regime">—</b>: composite <span data-source="stress_latest" data-field="composite" data-fmt="int">—</span>/100, with shock channels at the <span data-source="stress_latest" data-field="shock" data-fmt="ord">—</span> and equity vol at the <span data-source="stress_latest" data-field="vix" data-fmt="ord">—</span>.</li>
+            <li>Scenario skew: escalation <b data-source="scenarios" data-field="probability" data-where="id=esc" data-fmt="frac">—</b> vs de-escalation <b data-source="scenarios" data-field="probability" data-where="id=deesc" data-fmt="frac">—</b> gives Brent an expected 5-day move of <b data-source="scenario_moves" data-field="expected" data-where="series=Brent" data-fmt="spct1">—</b> and the 10-year <b data-source="scenario_moves" data-field="expected" data-where="series=UST 10Y" data-fmt="sbp1">—</b>.</li>
+            <li>The war is an inflation shock more than a growth shock: the Fed is hiking, the dollar is at the <span data-source="latest" data-field="pct_rank" data-where="series=DXY" data-fmt="ord">—</span> and gold is <span data-source="latest" data-field="chg_prewar_pct" data-where="series=Gold" data-fmt="spct1">—</span> since the war began.</li>
+            <li>Next regime breaks: CPI (14 Oct), Brazil runoff (25 Oct), FOMC (28 Oct), US midterms (3 Nov), funding cliff (11 Dec), US–China truce cliff (10 Jan).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="gr-card gr-method" id="signal-method">
+      <h3>Method and caveats</h3>
+      <ol>
+        <li><b>Exposure index.</b> For each asset class, sum over live catalysts of (risk score × exposure rating to the catalyst's channel); the most exposed asset is scaled to 100. It measures how much geopolitical risk an asset should carry, not its direction.</li>
+        <li><b>Pricing.</b> The asset's gauge as a one-year percentile, inverted where a high reading means complacency (TAIEX). For yields, spreads, volatility and USD-crosses, high = risk priced.</li>
+        <li><b>Gap and thresholds.</b> Gap = exposure − pricing; ±25 triggers a signal, ±50 is high conviction. Thresholds are heuristics, not optimized.</li>
+        <li><b>Confirmation.</b> A positive gap only becomes "Under-priced" if the gauge moved in its risk-priced direction on average and in at least half of past Middle East escalations. This stops the engine from recommending hedges that have not worked (gold this year).</li>
+        <li><b>Momentum, oil beta, scenarios.</b> 20-day change ÷ (daily vol × √20); 60-day beta to Brent's daily move; scenario-weighted 5-day move from event-study averages and analyst probabilities.</li>
+        <li><b>Caveats.</b> One year of daily data and a handful of events; percentiles use the full window (look-ahead within the sample); no transaction costs or out-of-sample test. The next step is a rolling-window backtest of the gap signal against forward VIX and Brent returns.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================= CATALYSTS ================= -->
+  <section class="gr-page" id="catalysts" hidden>
+    <div class="gr-card" id="catalyst-tracker">
+      <div class="gr-cardhead">
+        <h3>Catalyst tracker</h3>
+        <input class="gr-search" id="cat-search" type="search" placeholder="Search catalysts" aria-label="Search catalysts">
+      </div>
+      <p class="gr-note">Live and scheduled catalysts with an analyst risk score (1 low – 5 severe). Switch to the event log for dated past events used in the event study.</p>
+      <div class="gr-seg" id="cat-seg" role="group" aria-label="Region"></div>
+      <div class="gr-tablewrap">
+        <table class="gr-table" id="cat-table" data-source="catalysts" data-row-key="id">
+          <thead><tr>
+            <th data-field="date"><button data-sort="date">Date</button></th>
+            <th data-field="title"><button data-sort="title">Catalyst</button></th>
+            <th data-field="region" class="gr-hide-narrow"><button data-sort="region">Region</button></th>
+            <th data-field="status"><button data-sort="status">Status</button></th>
+            <th data-field="analyst_risk"><button data-sort="analyst_risk">Risk</button></th>
+            <th data-field="detail" class="gr-hide-narrow">What's happening</th>
+            <th data-field="assets" class="gr-hide-narrow">Assets exposed</th>
+            <th data-field="source_title">Source</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="gr-section" id="alt-data">
+      <h2 class="gr-h2">Alternative geopolitical data</h2>
+      <p class="gr-sub">Shipping, sanctions and energy-balance indicators that lead price moves.</p>
+      <div class="gr-ind">
+        <div class="gr-card">
+          <span class="gr-note">Strait of Hormuz transits per day</span>
+          <span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=hormuz_transits" data-fmt="int">—</span>
+          <div class="gr-meter"><span id="m-transits"></span></div>
+          <span class="gr-note"><span data-source="hormuz_ratio" data-field="pct_of_normal" data-fmt="pct1">—</span> of the pre-crisis baseline of <span data-source="indicators" data-field="baseline" data-where="id=hormuz_transits" data-fmt="int">—</span> · <span data-source="indicators" data-field="as_of" data-where="id=hormuz_transits" data-fmt="dshort">—</span></span>
+        </div>
+        <div class="gr-card">
+          <span class="gr-note">Vessels holding position in Strait/Gulf</span>
+          <span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=vessels_holding" data-fmt="int">—</span>
+          <span class="gr-note">AIS-visible, away from working ports · <span data-source="indicators" data-field="as_of" data-where="id=vessels_holding" data-fmt="dshort">—</span></span>
+        </div>
+        <div class="gr-card">
+          <span class="gr-note">Vessels redirected by US blockade</span>
+          <span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=redirected" data-fmt="int">—</span>
+          <span class="gr-note">Cumulative since the blockade resumed · <span data-source="indicators" data-field="as_of" data-where="id=redirected" data-fmt="dshort">—</span></span>
+        </div>
+        <div class="gr-card">
+          <span class="gr-note">Iran crude loadings, September (kb/d)</span>
+          <span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=iran_loadings" data-fmt="int">—</span>
+          <span class="gr-note">vs <span data-source="indicators" data-field="baseline" data-where="id=iran_loadings" data-fmt="int">—</span> kb/d in August (Kpler)</span>
+        </div>
+        <div class="gr-card">
+          <span class="gr-note">Brent–WTI spread ($/bbl)</span>
+          <span class="val dash-skeleton" data-source="brent_wti" data-field="spread" data-fmt="usd2">—</span>
+          <span class="gr-note">Brent <span data-source="brent_wti" data-field="brent" data-fmt="usd2">—</span>, WTI <span data-source="brent_wti" data-field="wti" data-fmt="usd2">—</span> · <span data-source="brent_wti" data-field="as_of" data-fmt="dshort">—</span>; wider = seaborne tightness</span>
+        </div>
+        <div class="gr-card">
+          <span class="gr-note">EU gas storage fill</span>
+          <span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=eu_storage" data-fmt="pctint">—</span>
+          <div class="gr-meter"><span id="m-storage"></span></div>
+          <span class="gr-note">Target <span data-source="indicators" data-field="baseline" data-where="id=eu_storage" data-fmt="pctint">—</span> by 1 Nov · TTF €<span data-source="indicators" data-field="value" data-where="id=ttf" data-fmt="int">—</span>/MWh · <span data-source="indicators" data-field="as_of" data-where="id=eu_storage" data-fmt="dshort">—</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gr-grid">
+      <div class="gr-card" id="premium-card">
+        <h3>Physical vs paper oil</h3>
+        <p class="gr-note">FRED dated Brent spot against Brent futures on the same day.</p>
+        <div class="gr-tablewrap">
+          <table class="gr-table" id="prem-table" data-source="premium" data-row-key="date">
+            <thead><tr><th data-field="date">Date</th><th data-field="dated" class="r">Dated Brent</th><th data-field="futures" class="r">Futures</th><th data-field="premium" class="r">Premium</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="gr-card" id="gpr-card">
+        <h3>Daily geopolitical risk index</h3>
+        <p class="gr-note">Caldara–Iacoviello daily GPR (newspaper-based, provisional). Darker bars sit above the period average of <span data-source="gpr_stats" data-field="mean" data-fmt="num1">—</span>.</p>
+        <div class="gr-chartbox small dash-skeleton" id="gpr-chart" data-source="gpr"><div class="gr-tip" id="gpr-tip"></div></div>
+      </div>
+    </div>
+
+    <div class="gr-grid">
+      <div class="gr-card" id="odds-card">
+        <h3>Market-implied politics: midterm control</h3>
+        <p class="gr-note">Average of Kalshi and Polymarket, March vs October 2026 (Democratic control).</p>
+        <div class="gr-chartbox small dash-skeleton" id="odds-chart" data-source="odds_shift"><div class="gr-tip" id="odds-tip"></div></div>
+      </div>
+      <div class="gr-card" id="other-odds">
+        <h3>Other market-implied probabilities</h3>
+        <div class="gr-ind">
+          <div><span class="gr-note">Oct FOMC hike (CME, after Sep meeting)</span><div class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=fed_oct_hike" data-fmt="pctint">—</div></div>
+          <div><span class="gr-note">CLARITY Act becomes law in 2026</span><div class="val dash-skeleton" data-source="predictions" data-field="probability" data-where="market=CLARITY Act law in 2026&amp;as_of=2026-09-15" data-fmt="pct1">—</div><span class="gr-note">from <span data-source="predictions" data-field="probability" data-where="market=CLARITY Act law in 2026&amp;as_of=2026-09-14" data-fmt="pct1">—</span> before the cloture vote</span></div>
+          <div><span class="gr-note">Republicans keep both chambers</span><div class="val dash-skeleton" data-source="predictions" data-field="probability" data-where="market=Both chambers&amp;platform=Kalshi" data-fmt="pct1">—</div><span class="gr-note">Kalshi; Polymarket <span data-source="predictions" data-field="probability" data-where="market=Both chambers&amp;platform=Polymarket" data-fmt="pct1">—</span></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ASIA & AFRICA ================= -->
+  <section class="gr-page" id="asiaafrica" hidden>
+    <div class="gr-section">
+      <p class="gr-group-label">Asia-Pacific gauges</p>
+      <div class="gr-kpis">
+        <div class="gr-card gr-kpi" id="kpi-taiex">
+          <span class="lab">TAIEX (Taiwan)</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=TAIEX" data-fmt="num2">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_prewar_pct" data-where="series=TAIEX" data-fmt="spct1">—</b> since 27 Feb · <span data-source="latest" data-field="pct_rank" data-where="series=TAIEX" data-fmt="ord">—</span></span>
+          <div class="spark" data-source="markets" data-spark="TAIEX"></div>
+        </div>
+        <div class="gr-card gr-kpi" id="kpi-twd">
+          <span class="lab">USD/TWD</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=USD/TWD" data-fmt="num3">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_prewar_pct" data-where="series=USD/TWD" data-fmt="spct1" data-tone="up-bad">—</b> since 27 Feb · <span data-source="latest" data-field="pct_rank" data-where="series=USD/TWD" data-fmt="ord">—</span></span>
+          <div class="spark" data-source="markets" data-spark="USD/TWD"></div>
+        </div>
+        <div class="gr-card gr-kpi" id="kpi-krw">
+          <span class="lab">USD/KRW</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=USD/KRW" data-fmt="num2">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_prewar_pct" data-where="series=USD/KRW" data-fmt="spct1" data-tone="up-bad">—</b> since 27 Feb · <span data-source="latest" data-field="pct_rank" data-where="series=USD/KRW" data-fmt="ord">—</span></span>
+          <div class="spark" data-source="markets" data-spark="USD/KRW"></div>
+        </div>
+        <div class="gr-card gr-kpi" id="kpi-inr">
+          <span class="lab">USD/INR</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=USD/INR" data-fmt="num2">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_prewar_pct" data-where="series=USD/INR" data-fmt="spct1" data-tone="up-bad">—</b> since 27 Feb · <span data-source="latest" data-field="pct_rank" data-where="series=USD/INR" data-fmt="ord">—</span></span>
+          <div class="spark" data-source="markets" data-spark="USD/INR"></div>
+        </div>
+      </div>
+    </div>
+    <div class="gr-section">
+      <p class="gr-group-label">Africa-linked gauges</p>
+      <div class="gr-kpis">
+        <div class="gr-card gr-kpi" id="kpi-copper">
+          <span class="lab">Copper futures, $/lb (DRC, Zambia supply)</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=Copper" data-fmt="usd3">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_prewar_pct" data-where="series=Copper" data-fmt="spct1">—</b> since 27 Feb · <span data-source="latest" data-field="pct_rank" data-where="series=Copper" data-fmt="ord">—</span></span>
+          <div class="spark" data-source="markets" data-spark="Copper"></div>
+        </div>
+        <div class="gr-card gr-kpi" id="kpi-cocoa">
+          <span class="lab">Cocoa futures, $/t (West Africa)</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=Cocoa" data-fmt="int">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_prewar_pct" data-where="series=Cocoa" data-fmt="spct1">—</b> since 27 Feb · <span data-source="latest" data-field="pct_rank" data-where="series=Cocoa" data-fmt="ord">—</span></span>
+          <div class="spark" data-source="markets" data-spark="Cocoa"></div>
+        </div>
+        <div class="gr-card gr-kpi" id="kpi-zar">
+          <span class="lab">USD/ZAR (EM-Africa proxy)</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=USD/ZAR" data-fmt="num3">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_prewar_pct" data-where="series=USD/ZAR" data-fmt="spct1" data-tone="up-bad">—</b> since 27 Feb · <span data-source="latest" data-field="pct_rank" data-where="series=USD/ZAR" data-fmt="ord">—</span></span>
+          <div class="spark" data-source="markets" data-spark="USD/ZAR"></div>
+        </div>
+        <div class="gr-card gr-kpi" id="kpi-gold2">
+          <span class="lab">Gold futures (Sudan, Sahel supply)</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=Gold" data-fmt="usd2">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_prewar_pct" data-where="series=Gold" data-fmt="spct1">—</b> since 27 Feb · <span data-source="latest" data-field="pct_rank" data-where="series=Gold" data-fmt="ord">—</span></span>
+          <div class="spark" data-source="markets" data-spark="Gold"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gr-section">
+      <p class="gr-group-label">Latin America gauges</p>
+      <div class="gr-kpis">
+        <div class="gr-card gr-kpi" id="kpi-bvsp">
+          <span class="lab">Bovespa (Brazil)</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=Bovespa" data-fmt="int">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_1m_pct" data-where="series=Bovespa" data-fmt="spct1">—</b> vs a month ago · <span data-source="latest" data-field="pct_rank" data-where="series=Bovespa" data-fmt="ord">—</span></span>
+          <div class="spark" data-source="markets" data-spark="Bovespa"></div>
+        </div>
+        <div class="gr-card gr-kpi" id="kpi-brl">
+          <span class="lab">USD/BRL</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=USD/BRL" data-fmt="num3">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_1m_pct" data-where="series=USD/BRL" data-fmt="spct1" data-tone="up-bad">—</b> vs a month ago · <span data-source="latest" data-field="pct_rank" data-where="series=USD/BRL" data-fmt="ord">—</span></span>
+          <div class="spark" data-source="markets" data-spark="USD/BRL"></div>
+        </div>
+        <div class="gr-card gr-kpi" id="kpi-mxn">
+          <span class="lab">USD/MXN</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=USD/MXN" data-fmt="num3">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_1m_pct" data-where="series=USD/MXN" data-fmt="spct1" data-tone="up-bad">—</b> vs a month ago · <span data-source="latest" data-field="pct_rank" data-where="series=USD/MXN" data-fmt="ord">—</span></span>
+          <div class="spark" data-source="markets" data-spark="USD/MXN"></div>
+        </div>
+        <div class="gr-card gr-kpi" id="kpi-cop">
+          <span class="lab">USD/COP</span>
+          <span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=USD/COP" data-fmt="num2">—</span>
+          <span class="delta"><b data-source="latest" data-field="chg_1m_pct" data-where="series=USD/COP" data-fmt="spct1" data-tone="up-bad">—</b> vs a month ago · <span data-source="latest" data-field="pct_rank" data-where="series=USD/COP" data-fmt="ord">—</span></span>
+          <div class="spark" data-source="markets" data-spark="USD/COP"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gr-card" id="aa-tracker">
+      <h3>Asia, Africa and Latin America tracker</h3>
+      <p class="gr-note">Analyst risk scores reflect market relevance, not humanitarian severity.</p>
+      <div class="gr-seg" id="aa-seg" role="group" aria-label="Region"></div>
+      <div class="gr-tablewrap">
+        <table class="gr-table" id="aa-table" data-source="catalysts" data-row-key="id">
+          <thead><tr>
+            <th data-field="date">Date</th><th data-field="title">Conflict</th><th data-field="status">Status</th><th data-field="analyst_risk">Risk</th><th data-field="detail" class="gr-hide-narrow">What's happening</th><th data-field="assets" class="gr-hide-narrow">Market channel</th><th data-field="source_title">Source</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="gr-section" id="aa-indicators">
+      <h2 class="gr-h2">Regional indicators</h2>
+      <div class="gr-ind">
+        <div class="gr-card"><span class="gr-note">PLA median-line crossings, 4 Jun spike</span><span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=pla_median" data-fmt="int">—</span><span class="gr-note">sorties · otherwise subdued in H1 2026</span></div>
+        <div class="gr-card"><span class="gr-note">Pending US arms package for Taiwan</span><span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=tw_arms" data-fmt="bn">—</span><span class="gr-note">Historically followed by PLA drills</span></div>
+        <div class="gr-card"><span class="gr-note">Japan's rare-earth reliance on China</span><span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=jp_re" data-fmt="pctint">—</span><span class="gr-note">down from about <span data-source="indicators" data-field="baseline" data-where="id=jp_re" data-fmt="pctint">—</span></span></div>
+        <div class="gr-card"><span class="gr-note">Libya Sharara output after reopening</span><span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=sharara" data-fmt="int">—</span><span class="gr-note">kb/d · about <span data-source="indicators" data-field="baseline" data-where="id=sharara" data-fmt="int">—</span> kb/d in August · <span data-source="indicators" data-field="value" data-where="id=sharara_loss" data-fmt="int">—</span> $m lost</span></div>
+        <div class="gr-card"><span class="gr-note">Displaced people in Sudan</span><span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=sudan_idps" data-fmt="num1">—</span><span class="gr-note">million · <span data-source="indicators" data-field="value" data-where="id=sudan_health" data-fmt="int">—</span>+ attacks on health care, Jan–Aug</span></div>
+        <div class="gr-card"><span class="gr-note">Brazil first round: Flávio Bolsonaro vs Lula</span><span class="val"><span data-source="indicators" data-field="value" data-where="id=br_flavio" data-fmt="pct1">—</span> · <span data-source="indicators" data-field="value" data-where="id=br_lula" data-fmt="pct1">—</span></span><span class="gr-note">Runoff 25 Oct</span></div>
+        <div class="gr-card"><span class="gr-note">Mexico–US policy rate spread</span><span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=mx_carry" data-fmt="int">—</span><span class="gr-note">bp · Banxico <span data-source="indicators" data-field="value" data-where="id=banxico" data-fmt="pct2">—</span>; peso <span data-source="indicators" data-field="value" data-where="id=mxn_sept" data-fmt="pct1">—</span> weaker in September</span></div>
+        <div class="gr-card"><span class="gr-note">US tariff on Colombia (Section 301)</span><span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=co_tariff" data-fmt="pct1">—</span><span class="gr-note">Coffee, oil and coal excluded</span></div>
+        <div class="gr-card"><span class="gr-note">US Treasury swap line for Argentina</span><span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=arg_swap" data-fmt="bn">—</span><span class="gr-note">vs about $20bn of 2026 debt payments</span></div>
+        <div class="gr-card"><span class="gr-note">US–Venezuela crude deal</span><span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=ven_oil" data-fmt="bn">—</span><span class="gr-note">Signed after Maduro's capture in January</span></div>
+      </div>
+    </div>
+
+    <div class="gr-card" id="aa-signals">
+      <h3>Signals for Asia, Africa and Latin America assets</h3>
+      <p class="gr-note">Same engine as the Quant signals tab, filtered to regional assets. "Watch" here often means the event sample (Middle East escalations) cannot confirm a regional risk such as an election or a Strait crisis — the exposure is real but untested.</p>
+      <div class="gr-signal-list" id="aa-sig" data-source="signals"></div>
+    </div>
+  </section>
+
+  <!-- ================= FRAMEWORK ================= -->
+  <section class="gr-page" id="framework" hidden>
+    <div class="gr-card" id="heatmap-card">
+      <h3>Exposure matrix: which catalysts move which assets</h3>
+      <p class="gr-note">Analyst rating of transmission strength, 0 none – 3 primary channel. Hover a cell for the mechanism. These ratings feed the exposure index on the Quant signals tab.</p>
+      <div class="gr-heat" id="heat" data-source="framework"><div class="gr-tip" id="heat-tip"></div></div>
+    </div>
+
+    <div class="gr-section">
+      <h2 class="gr-h2">Asset-class monitors</h2>
+      <div class="gr-grid3">
+        <div class="gr-card gr-asset" id="fw-energy"><h3>Energy · Brent futures</h3><div class="row"><span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=Brent" data-fmt="usd2">—</span><span class="gr-note"><span data-source="latest" data-field="pct_rank" data-where="series=Brent" data-fmt="ord">—</span> of 1-year range</span></div><div class="spark" data-source="markets" data-spark="Brent"></div><dl><dt>Read</dt><dd data-source="framework" data-field="current_read" data-where="asset_class=Energy">—</dd><dt>Watch</dt><dd data-source="framework" data-field="watch" data-where="asset_class=Energy">—</dd></dl></div>
+        <div class="gr-card gr-asset" id="fw-rates"><h3>Rates · US 10-year</h3><div class="row"><span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=UST 10Y" data-fmt="pct2">—</span><span class="gr-note"><span data-source="latest" data-field="pct_rank" data-where="series=UST 10Y" data-fmt="ord">—</span> of 1-year range</span></div><div class="spark" data-source="markets" data-spark="UST 10Y"></div><dl><dt>Read</dt><dd data-source="framework" data-field="current_read" data-where="asset_class=Rates">—</dd><dt>Watch</dt><dd data-source="framework" data-field="watch" data-where="asset_class=Rates">—</dd></dl></div>
+        <div class="gr-card gr-asset" id="fw-ratesvol"><h3>Rates volatility · MOVE</h3><div class="row"><span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=MOVE" data-fmt="num2">—</span><span class="gr-note"><span data-source="latest" data-field="pct_rank" data-where="series=MOVE" data-fmt="ord">—</span> of 1-year range</span></div><div class="spark" data-source="markets" data-spark="MOVE"></div><dl><dt>Read</dt><dd data-source="framework" data-field="current_read" data-where="asset_class=Rates volatility">—</dd><dt>Watch</dt><dd data-source="framework" data-field="watch" data-where="asset_class=Rates volatility">—</dd></dl></div>
+        <div class="gr-card gr-asset" id="fw-equities"><h3>US equities · VIX</h3><div class="row"><span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=VIX" data-fmt="num2">—</span><span class="gr-note"><span data-source="latest" data-field="pct_rank" data-where="series=VIX" data-fmt="ord">—</span> of 1-year range</span></div><div class="spark" data-source="markets" data-spark="VIX"></div><dl><dt>Read</dt><dd data-source="framework" data-field="current_read" data-where="asset_class=US equities">—</dd><dt>Watch</dt><dd data-source="framework" data-field="watch" data-where="asset_class=US equities">—</dd></dl></div>
+        <div class="gr-card gr-asset" id="fw-credit"><h3>Credit · HY spread</h3><div class="row"><span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=HY OAS" data-fmt="pct2">—</span><span class="gr-note"><span data-source="latest" data-field="pct_rank" data-where="series=HY OAS" data-fmt="ord">—</span> of 1-year range · IG <span data-source="fred_latest" data-field="value" data-where="series_id=BAMLC0A0CM" data-fmt="pct2">—</span></span></div><div class="spark" data-source="markets" data-spark="HY OAS"></div><dl><dt>Read</dt><dd data-source="framework" data-field="current_read" data-where="asset_class=Credit">—</dd><dt>Watch</dt><dd data-source="framework" data-field="watch" data-where="asset_class=Credit">—</dd></dl></div>
+        <div class="gr-card gr-asset" id="fw-gold"><h3>Gold · futures</h3><div class="row"><span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=Gold" data-fmt="usd2">—</span><span class="gr-note"><span data-source="latest" data-field="pct_rank" data-where="series=Gold" data-fmt="ord">—</span> of 1-year range</span></div><div class="spark" data-source="markets" data-spark="Gold"></div><dl><dt>Read</dt><dd data-source="framework" data-field="current_read" data-where="asset_class=Gold">—</dd><dt>Watch</dt><dd data-source="framework" data-field="watch" data-where="asset_class=Gold">—</dd></dl></div>
+        <div class="gr-card gr-asset" id="fw-fx"><h3>US dollar · DXY</h3><div class="row"><span class="val dash-skeleton" data-source="latest" data-field="value" data-where="series=DXY" data-fmt="num2">—</span><span class="gr-note"><span data-source="latest" data-field="pct_rank" data-where="series=DXY" data-fmt="ord">—</span> of 1-year range</span></div><div class="spark" data-source="markets" data-spark="DXY"></div><dl><dt>Read</dt><dd data-source="framework" data-field="current_read" data-where="asset_class=US dollar">—</dd><dt>Watch</dt><dd data-source="framework" data-field="watch" data-where="asset_class=US dollar">—</dd></dl></div>
+      </div>
+    </div>
+
+    <div class="gr-section" id="policy-rates">
+      <h2 class="gr-h2">Policy and inflation backdrop</h2>
+      <div class="gr-ind">
+        <div class="gr-card"><span class="gr-note">Fed funds, upper bound</span><span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=fed_upper" data-fmt="pct2">—</span><span class="gr-note">Set <span data-source="indicators" data-field="as_of" data-where="id=fed_upper" data-fmt="dshort">—</span></span></div>
+        <div class="gr-card"><span class="gr-note">ECB deposit rate</span><span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=ecb_dfr" data-fmt="pct2">—</span><span class="gr-note">Set <span data-source="indicators" data-field="as_of" data-where="id=ecb_dfr" data-fmt="dshort">—</span></span></div>
+        <div class="gr-card"><span class="gr-note">US CPI y/y, August</span><span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=cpi_headline" data-fmt="pct1">—</span><span class="gr-note">Core <span data-source="indicators" data-field="value" data-where="id=cpi_core" data-fmt="pct1">—</span></span></div>
+        <div class="gr-card"><span class="gr-note">US cost of Iran war (estimate)</span><span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=war_cost" data-fmt="bn">—</span><span class="gr-note">As of <span data-source="indicators" data-field="as_of" data-where="id=war_cost" data-fmt="dshort">—</span></span></div>
+        <div class="gr-card"><span class="gr-note">IEEPA tariffs exposed to refunds</span><span class="val dash-skeleton" data-source="indicators" data-field="value" data-where="id=ieepa_refunds" data-fmt="bn">—</span><span class="gr-note">Estimate after the 20 Feb ruling</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= WASHINGTON ================= -->
+  <section class="gr-page" id="washington" hidden>
+    <p class="gr-sub">Market-moving actions in Congress, the Supreme Court and federal agencies, with the next decision date where one is set.</p>
+    <div class="gr-card" id="wa-congress"><h3>Congress</h3><div class="gr-tablewrap"><table class="gr-table" data-source="washington" data-row-key="id" data-branch="Congress"><thead><tr><th data-field="item">Item</th><th data-field="status">Status</th><th data-field="last_action">Last action</th><th data-field="next_date">Next</th><th data-field="relevance" class="gr-hide-narrow">Why it matters</th><th data-field="assets" class="gr-hide-narrow">Assets</th><th data-field="source_title">Source</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="gr-card" id="wa-court"><h3>Supreme Court</h3><div class="gr-tablewrap"><table class="gr-table" data-source="washington" data-row-key="id" data-branch="Supreme Court"><thead><tr><th data-field="item">Case</th><th data-field="status">Status</th><th data-field="last_action">Last action</th><th data-field="next_date">Next</th><th data-field="relevance" class="gr-hide-narrow">Why it matters</th><th data-field="assets" class="gr-hide-narrow">Assets</th><th data-field="source_title">Source</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="gr-card" id="wa-agency"><h3>Agencies and regulators</h3><div class="gr-tablewrap"><table class="gr-table" data-source="washington" data-row-key="id" data-branch="Agency"><thead><tr><th data-field="body">Agency</th><th data-field="item">Action</th><th data-field="status">Status</th><th data-field="last_action">Last action</th><th data-field="next_date">Next</th><th data-field="relevance" class="gr-hide-narrow">Why it matters</th><th data-field="source_title">Source</th></tr></thead><tbody></tbody></table></div></div>
+  </section>
+
+  <!-- ================= REGULATION ================= -->
+  <section class="gr-page" id="regulation" hidden>
+    <div class="gr-card" id="reg-matrix-card">
+      <h3>US vs EU, by sector</h3>
+      <p class="gr-note">Where the two jurisdictions are moving on the same issue. Pill color: adopted or in force, pending, or stalled / lifted.</p>
+      <div class="gr-matrix" id="reg-matrix" data-source="regulation"></div>
+    </div>
+    <div class="gr-card" id="reg-detail">
+      <div class="gr-cardhead"><h3>Measure detail</h3><div class="gr-seg" id="reg-seg" role="group" aria-label="Jurisdiction"></div></div>
+      <div class="gr-tablewrap">
+        <table class="gr-table" id="reg-table" data-source="regulation" data-row-key="id">
+          <thead><tr><th data-field="jurisdiction">Juris.</th><th data-field="sector">Sector</th><th data-field="measure">Measure</th><th data-field="stage">Stage</th><th data-field="key_date">Key date</th><th data-field="summary" class="gr-hide-narrow">What it does</th><th data-field="market_impact" class="gr-hide-narrow">Market impact</th><th data-field="source_title">Source</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CALENDAR ================= -->
+  <section class="gr-page" id="calendar" hidden>
+    <div class="gr-card" id="cal-card">
+      <h3>Upcoming catalysts</h3>
+      <p class="gr-note">Scheduled data, central-bank, political, court and regulatory dates through 2027.</p>
+      <div class="gr-seg" id="cal-seg" role="group" aria-label="Type"></div>
+      <div class="gr-tablewrap">
+        <table class="gr-table" id="cal-table" data-source="calendar" data-row-key="key">
+          <thead><tr><th data-field="date">Date</th><th data-field="event">Event</th><th data-field="type">Type</th><th data-field="assets" class="gr-hide-narrow">Assets exposed</th><th data-field="source_title">Source</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="calcs.js"></script>
+<script src="app.js"></script>

@@ -1,0 +1,5 @@
+bucket,order,n,vix_fwd,vix_up,spx_fwd
+Wide (≥ 50),1,22,0.41,73,-0.15
+Moderate (25–49),2,32,0.55,50,-0.09
+Narrow (< 25),3,184,-0.37,48,0.82
+All days,4,238,-0.17,50,0.61

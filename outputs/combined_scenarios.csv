@@ -1,0 +1,15 @@
+id,label,geo,fed,y2_shock,probability,s_p_500,treasury_2y,ust_10y,hy_oas,dxy,usd_jpy,gold,brent,vix,smh,xle,p6040,order
+base_hawkish_hold,Status quo + hawkish hold,Status quo,hawkish hold,3,27.5,-0.08,3,1.91,-1.16,0.09,-0.04,-0.21,0,0.38,-0.18,0.05,-0.11,1
+esc_hawkish_hold,Escalation + hawkish hold,Escalation,hawkish hold,3,16.5,0.32,9,7.21,-5.36,0.29,0.26,-3.41,5,7.08,-0.28,1.44,-0.04,2
+deesc_hawkish_hold,De-escalation + hawkish hold,De-escalation,hawkish hold,3,11,1.82,5.3,1.91,-13.46,0.09,0.06,-1.21,-7,-12.32,3.62,-3.95,1.03,3
+base_hike,Status quo + surprise hike,Status quo,surprise hike,12,9.7,-0.34,12,7.64,-4.64,0.34,-0.17,-0.83,0,1.53,-0.74,0.18,-0.45,4
+base_neutral_hold,Status quo + neutral hold,Status quo,neutral hold,-5,9,0.14,-5,-3.18,1.93,-0.14,0.07,0.35,0,-0.64,0.31,-0.07,0.19,5
+esc_hike,Escalation + surprise hike,Escalation,surprise hike,12,5.8,0.06,18,12.94,-8.84,0.54,0.13,-4.03,5,8.23,-0.84,1.58,-0.38,6
+esc_neutral_hold,Escalation + neutral hold,Escalation,neutral hold,-5,5.4,0.54,1,2.12,-2.27,0.06,0.37,-2.85,5,6.06,0.21,1.33,0.26,7
+deesc_hike,De-escalation + surprise hike,De-escalation,surprise hike,12,3.9,1.56,14.3,7.64,-16.94,0.34,-0.07,-1.83,-7,-11.17,3.06,-3.82,0.69,8
+base_dovish_hold,Status quo + dovish hold,Status quo,dovish hold,-15,3.8,0.42,-15,-9.55,5.79,-0.43,0.21,1.04,0,-1.91,0.92,-0.22,0.56,9
+deesc_neutral_hold,De-escalation + neutral hold,De-escalation,neutral hold,-5,3.6,2.04,-2.7,-3.18,-10.37,-0.14,0.17,-0.65,-7,-13.34,4.11,-4.07,1.33,10
+esc_dovish_hold,Escalation + dovish hold,Escalation,dovish hold,-15,2.3,0.82,-9,-4.25,1.59,-0.23,0.51,-2.16,5,4.79,0.82,1.17,0.63,11
+deesc_dovish_hold,De-escalation + dovish hold,De-escalation,dovish hold,-15,1.5,2.32,-12.7,-9.55,-6.51,-0.43,0.31,0.04,-7,-14.61,4.72,-4.22,1.7,12
+expected,Probability-weighted,—,—,1.9,100,0.45,4.2,2.82,-4.47,0.12,0.08,-1.29,0.1,-0.28,0.61,-0.35,0.18,13
+stress,Stress test: double escalation + surprise hike,Escalation ×2,surprise hike,12,,0.46,24,18.24,-13.04,0.74,0.43,-7.23,10,14.93,-0.94,2.98,-0.31,14
