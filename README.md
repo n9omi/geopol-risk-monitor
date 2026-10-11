@@ -66,15 +66,15 @@ One run of `run.sh` produces:
 ## Quickstart
 
 ```bash
-git clone https://github.com/n9omi/geopolitical-risk-monitor.git
-cd geopolitical-risk-monitor
+git clone https://github.com/n9omi/n9omi-geopol-risk-monitor.git
+cd n9omi-geopol-risk-monitor
 bash run.sh                          # rebuild datasets and page, run tests, export outputs
 python3 -m http.server -d site 8000  # then open http://localhost:8000
 ```
 
 You need Python 3.9 or later; the pipeline uses only the standard library. The tests and exports need Node.js 18 or later, and `run.sh` installs their two dev dependencies (d3 and jsdom) on first run. Open the page through a local server rather than by double-clicking the file, because browsers block `fetch` from `file://` pages.
 
-To publish the page, push to GitHub and set **Settings → Pages → Source** to **GitHub Actions**. The included workflow tests the page and deploys `site/` on every push to `main`.
+To publish the page, set **Settings → Pages → Source** to **GitHub Actions**. The included workflow tests the page and deploys `site/` to [n9omi.github.io/n9omi-geopol-risk-monitor](https://n9omi.github.io/n9omi-geopol-risk-monitor/) on every push to `main`.
 
 ## How it's built
 

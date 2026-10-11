@@ -146,7 +146,7 @@ npm test                             # tests and exports only
 
 ## Deploying to GitHub Pages
 
-The repository includes `.github/workflows/pages.yml`. On every push to `main`, it first runs the page tests (`check_marks` and `smoke`). If they pass, it uploads `site/` as the Pages artifact and deploys it. To turn it on, go to **Settings → Pages → Build and deployment → Source** and choose **GitHub Actions**. The site will then be at `https://<user>.github.io/geopolitical-risk-monitor/`.
+The repository includes `.github/workflows/pages.yml`. On every push to `main`, it first runs the page tests (`check_marks` and `smoke`). If they pass, it uploads `site/` as the Pages artifact and deploys it. To turn it on, go to **Settings → Pages → Build and deployment → Source** and choose **GitHub Actions**. The site will then be at `https://n9omi.github.io/n9omi-geopol-risk-monitor/`.
 
 The workflow deploys the committed `site/` folder; it does not rebuild. Run `run.sh` locally and commit the results when the data changes.
 
