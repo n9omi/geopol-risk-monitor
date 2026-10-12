@@ -137,9 +137,6 @@ raw/ (captured prices + research)  →  pipeline/01–07 (Python)  →  site/dat
 └── docs/                     guides, generated references, screenshots
 ```
 
-## Built with
-
-Built by Naomi Tinga with Claude (Anthropic) as an AI research and coding assistant. Claude gathered the public data, wrote the pipeline, calculations and tests, and drafted the analyst judgments. Every judgment is labelled as such and is meant to be reviewed, not taken as given.
 
 ## Disclaimer
 
